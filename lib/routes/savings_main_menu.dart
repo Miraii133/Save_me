@@ -11,7 +11,7 @@ class SavingsMainMenu extends StatefulWidget {
 
 class _SavingsMainMenuState extends State<SavingsMainMenu> {
   List<Map> _books = [
-    {'amount': 500, 'date': "07/16/2022"},
+    {'amount': 5000, 'date': "07/16/2022"},
     {'amount': 500, 'date': "07/16/2022"},
     {'amount': 500, 'date': "07/16/2022"},
     {'amount': 500, 'date': "07/16/2022"},
@@ -97,7 +97,8 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
   }
 
   DataTable _createDataTable() {
-    return DataTable(columns: _createColumns(), rows: _createRows());
+    return DataTable(
+        columnSpacing: 100, columns: _createColumns(), rows: _createRows());
   }
 
   List<DataColumn> _createColumns() {
@@ -106,7 +107,7 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       DataColumn(label: Text('Date', style: TextStyle(fontSize: 25))),
     ];
   }
-aa
+
   List<DataRow> _createRows() {
     return _books
         .map((book) => DataRow(cells: [
