@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'main_menu.dart';
@@ -14,19 +16,13 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     {'amount': 5000, 'date': "07/16/2022"},
     {'amount': 500, 'date': "07/16/2022"},
     {'amount': 500, 'date': "07/16/2022"},
-    {'amount': 500, 'date': "07/16/2022"},
-    {'amount': 500, 'date': "07/16/2022"},
-    {'amount': 500, 'date': "07/16/2022"},
-    {'amount': 500, 'date': "07/16/2022"},
-    {'amount': 500, 'date': "07/16/2022"},
-    {'amount': 500, 'date': "07/16/2022"},
-    {'amount': 500, 'date': "07/16/2022"},
-    {'amount': 500, 'date': "07/16/2022"},
-    {'amount': 500, 'date': "07/16/2022"},
   ];
 
   @override
   Widget build(BuildContext context) {
+    write(_books);
+    read();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
@@ -94,6 +90,38 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
         ),
       ),
     );
+  }
+
+  write(List text) async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final File file = File('${directory.path}/my_file.txt');
+    await file.writeAsString(text.toString());
+  }
+
+  Future<String> read() async {
+    String text = "";
+    try {
+      final Directory directory = await getApplicationDocumentsDirectory();
+      final File file = File('${directory.path}/my_file.txt');
+      text = await file.readAsString();
+      var stopFlagChars = [',', '{', '}'];
+      bool isStartOfWord = false;
+      var words = <String>[];
+      for (var char in text.runes) {
+        for (var i = 0; i < stopFlagChars.length; i++) {
+          var charToString = String.fromCharCode(char);
+          /*if (stopFlagChars[i] != charToString) {
+            print(charToString);
+          }*/
+          if (charToString == ':') {
+            isStartOfWord = true;
+          }
+        }
+      }
+    } catch (e) {
+      print("Couldn't read file");
+    }
+    return text;
   }
 
   DataTable _createDataTable() {
