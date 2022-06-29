@@ -14,6 +14,7 @@ class SavingsMainMenu extends StatefulWidget {
 class _SavingsMainMenuState extends State<SavingsMainMenu> {
   List<Map> _books = [
     {'amount': 5000, 'date': "07/16/2022"},
+    {'amount': 40, 'date': "07/16/2011"}
   ];
 
   @override
@@ -102,10 +103,10 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       final Directory directory = await getApplicationDocumentsDirectory();
       final File file = File('${directory.path}/my_file.txt');
       text = await file.readAsString();
-      var startFlagChar = ':';
-      var stopFlagChars = [',', '}'];
-      var excludedChars = [' ', ':'];
       print(text);
+      var startFlagChar = ':';
+      var stopFlagChars = [',', '{', '}'];
+      var excludedChars = [' ', ':'];
       var forMap = [];
       bool isStartOfWord = false;
       bool isStopOfWord = false;
@@ -133,18 +134,20 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
         if (isStartOfWord &&
             !isStopOfWord &&
             !excludedChars.contains(charToString)) {
-          print(charToString);
           words.add(charToString);
         }
         if (!isStartOfWord && isStopOfWord) {
-          print("words");
-          print(words.join());
-          forMap.add(words);
+          print("formap before the 2nd");
+          print(forMap);
+          var b = [words.join()];
+          forMap.add(b);
+          print("before clear");
+          print(words);
+          words.clear();
+          print(forMap);
           isStopOfWord = false;
         }
       }
-      print(words);
-      print(forMap);
     } catch (e) {
       print("Couldn't read file");
     }
