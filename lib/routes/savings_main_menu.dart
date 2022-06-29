@@ -14,7 +14,9 @@ class SavingsMainMenu extends StatefulWidget {
 class _SavingsMainMenuState extends State<SavingsMainMenu> {
   List<Map> _books = [
     {'amount': 5000, 'date': "07/16/2022"},
-    {'amount': 40, 'date': "07/16/2011"}
+    {'amount': 50, 'date': "07/15/2011"},
+    {'amount': 60, 'date': "07/13/2011"},
+    {'amount': 70, 'date': "07/12/2011"}
   ];
 
   @override
@@ -103,7 +105,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       final Directory directory = await getApplicationDocumentsDirectory();
       final File file = File('${directory.path}/my_file.txt');
       text = await file.readAsString();
-      print(text);
       var startFlagChar = ':';
       var stopFlagChars = [',', '{', '}'];
       var excludedChars = [' ', ':'];
@@ -137,17 +138,20 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
           words.add(charToString);
         }
         if (!isStartOfWord && isStopOfWord) {
-          print("formap before the 2nd");
-          print(forMap);
-          var b = [words.join()];
-          forMap.add(b);
-          print("before clear");
-          print(words);
+          var joinedWords = [words.join()];
+          forMap.add(joinedWords);
           words.clear();
           print(forMap);
           isStopOfWord = false;
         }
       }
+      var chunks = [];
+      int chunkSize = 2;
+      for (var i = 0; i < forMap.length; i += chunkSize) {
+        chunks.add(forMap.sublist(
+            i, i + chunkSize > forMap.length ? forMap.length : i + chunkSize));
+      }
+      print(chunks[1][1]);
     } catch (e) {
       print("Couldn't read file");
     }
