@@ -14,8 +14,6 @@ class SavingsMainMenu extends StatefulWidget {
 class _SavingsMainMenuState extends State<SavingsMainMenu> {
   List<Map> _books = [
     {'amount': 5000, 'date': "07/16/2022"},
-    {'amount': 500, 'date': "07/16/2022"},
-    {'amount': 500, 'date': "07/16/2022"},
   ];
 
   @override
@@ -104,20 +102,49 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       final Directory directory = await getApplicationDocumentsDirectory();
       final File file = File('${directory.path}/my_file.txt');
       text = await file.readAsString();
-      var stopFlagChars = [',', '{', '}'];
+      var startFlagChar = ':';
+      var stopFlagChars = [',', '}'];
+      var excludedChars = [' ', ':'];
+      print(text);
+      var forMap = [];
       bool isStartOfWord = false;
+      bool isStopOfWord = false;
       var words = <String>[];
       for (var char in text.runes) {
-        for (var i = 0; i < stopFlagChars.length; i++) {
-          var charToString = String.fromCharCode(char);
-          /*if (stopFlagChars[i] != charToString) {
-            print(charToString);
-          }*/
-          if (charToString == ':') {
-            isStartOfWord = true;
+        var charToString = String.fromCharCode(char);
+
+        // if char detects flag of start
+        if (startFlagChar == charToString) {
+          isStartOfWord = true;
+          isStopOfWord = false;
+        } else {
+          for (var i = 0; i < stopFlagChars.length; i++) {
+            // stopFlag does not contain whatever the
+            // char is and start word already true
+            if (stopFlagChars.contains(charToString) && isStartOfWord) {
+              isStartOfWord = false;
+              isStopOfWord = true;
+            }
           }
         }
+        // only puts char if : is detected, and ends if stopFlag is detected
+        // also excludes excluded characters.
+        // !excludedChars.contains(charToString)
+        if (isStartOfWord &&
+            !isStopOfWord &&
+            !excludedChars.contains(charToString)) {
+          print(charToString);
+          words.add(charToString);
+        }
+        if (!isStartOfWord && isStopOfWord) {
+          print("words");
+          print(words.join());
+          forMap.add(words);
+          isStopOfWord = false;
+        }
       }
+      print(words);
+      print(forMap);
     } catch (e) {
       print("Couldn't read file");
     }
