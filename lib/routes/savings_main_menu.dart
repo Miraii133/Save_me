@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'main_menu.dart';
 
@@ -21,6 +22,7 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
 
   @override
   Widget build(BuildContext context) {
+    createTable();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
@@ -80,7 +82,7 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          _createDataTable(),
+                          //_createDataTable(),
                         ]),
                   )),
             ),
@@ -168,9 +170,11 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     return Future.value(listOfData);
   }
 
-  Future<DataTable> _createDataTable() async {
-    Future<List> _futureList = read();
-    List list = await _futureList;
+  createTable() {
+    print(read());
+  }
+
+  /*DataTable _createDataTable() {
     return DataTable(
         columnSpacing: 100, columns: _createColumns(), rows: _createRows(list));
   }
@@ -200,5 +204,5 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     }
     return dataRow;
     /**/
-  }
+  }*/
 }
