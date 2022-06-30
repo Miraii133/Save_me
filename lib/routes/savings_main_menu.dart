@@ -21,9 +21,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
 
   @override
   Widget build(BuildContext context) {
-    write(_books);
-    read();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
@@ -99,8 +96,13 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     await file.writeAsString(text.toString());
   }
 
-  Future<String> read() async {
+  Future<List> read() async {
     String text = "";
+
+    // listOfData contains all data after
+    // textFile is read.
+    var listOfData = [];
+    var chunks = [];
     try {
       final Directory directory = await getApplicationDocumentsDirectory();
       final File file = File('${directory.path}/my_file.txt');
@@ -108,7 +110,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       var startFlagChar = ':';
       var stopFlagChars = [',', '{', '}'];
       var excludedChars = [' ', ':'];
-      var forMap = [];
       bool isStartOfWord = false;
       bool isStopOfWord = false;
       var words = <String>[];
@@ -137,30 +138,41 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
             !excludedChars.contains(charToString)) {
           words.add(charToString);
         }
+
+        // if char is already a stop word, join the
+        // words list and add in listOfData.
+        // clear words list to store another
+        // set of words
         if (!isStartOfWord && isStopOfWord) {
           var joinedWords = [words.join()];
-          forMap.add(joinedWords);
+          listOfData.add(joinedWords);
           words.clear();
-          print(forMap);
           isStopOfWord = false;
         }
       }
       var chunks = [];
       int chunkSize = 2;
-      for (var i = 0; i < forMap.length; i += chunkSize) {
-        chunks.add(forMap.sublist(
-            i, i + chunkSize > forMap.length ? forMap.length : i + chunkSize));
+      for (var i = 0; i < listOfData.length; i += chunkSize) {
+        chunks.add(listOfData.sublist(
+            i,
+            i + chunkSize > listOfData.length
+                ? listOfData.length
+                : i + chunkSize));
       }
-      print(chunks[1][1]);
     } catch (e) {
       print("Couldn't read file");
     }
-    return text;
+
+    // returns a future value of listOfData asynchronously
+    // once entire method is finished
+    return Future.value(listOfData);
   }
 
-  DataTable _createDataTable() {
+  Future<DataTable> _createDataTable() async {
+    Future<List> _futureList = read();
+    List list = await _futureList;
     return DataTable(
-        columnSpacing: 100, columns: _createColumns(), rows: _createRows());
+        columnSpacing: 100, columns: _createColumns(), rows: _createRows(list));
   }
 
   List<DataColumn> _createColumns() {
@@ -170,18 +182,23 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     ];
   }
 
-  List<DataRow> _createRows() {
-    return _books
-        .map((book) => DataRow(cells: [
-              DataCell(Text(
-                book['amount'].toString(),
-                style: TextStyle(fontSize: 20),
-              )),
-              DataCell(Text(
-                book['date'].toString(),
-                style: TextStyle(fontSize: 20),
-              )),
-            ]))
-        .toList();
+  List<DataRow> _createRows(list) {
+    var dataRow;
+    for (int i = 0; i < list.length; i++) {
+      for (int j = 0; j <= 1; j++) {
+        dataRow = DataRow(cells: [
+          DataCell(Text(
+            list[i][j],
+            style: TextStyle(fontSize: 20),
+          )),
+          DataCell(Text(
+            list[i][j]['date'].toString(),
+            style: TextStyle(fontSize: 20),
+          )),
+        ]);
+      }
+    }
+    return dataRow;
+    /**/
   }
 }
