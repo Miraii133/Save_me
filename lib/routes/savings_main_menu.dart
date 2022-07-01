@@ -22,7 +22,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
 
   @override
   Widget build(BuildContext context) {
-    createTable();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
@@ -82,7 +81,20 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          //_createDataTable(),
+                          FutureBuilder(
+                            builder: (context, snapshot) {
+                              //_createDataTable();
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                _createDataTable();
+                                return Text("nya");
+                              } else {
+                                // A Widget to show while the value loads
+                                return Text('Loading');
+                              }
+                            },
+                            future: _createDataTable(),
+                          )
                         ]),
                   )),
             ),
@@ -167,27 +179,13 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
 
     // returns a future value of listOfData asynchronously
     // once entire method is finished
-    return Future.value(listOfData);
+    return listOfData;
   }
 
-  createTable() {
-    print(read());
-  }
-
-  /*DataTable _createDataTable() {
-    return DataTable(
-        columnSpacing: 100, columns: _createColumns(), rows: _createRows(list));
-  }
-
-  List<DataColumn> _createColumns() {
-    return [
-      DataColumn(label: Text('Amount', style: TextStyle(fontSize: 25))),
-      DataColumn(label: Text('Date', style: TextStyle(fontSize: 25))),
-    ];
-  }
-
-  List<DataRow> _createRows(list) {
-    var dataRow;
+  /*createTable() async {
+    Future<List> _futureList = read();
+    List list = await _futureList;
+    print(list);
     for (int i = 0; i < list.length; i++) {
       for (int j = 0; j <= 1; j++) {
         dataRow = DataRow(cells: [
@@ -200,9 +198,40 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
             style: TextStyle(fontSize: 20),
           )),
         ]);
+  }*/
+
+  Future<DataTable> _createDataTable() async {
+    return DataTable(
+        columnSpacing: 100,
+        columns: _createColumns(),
+        rows: await _createRows());
+  }
+
+  List<DataColumn> _createColumns() {
+    return [
+      DataColumn(label: Text('Amount', style: TextStyle(fontSize: 25))),
+      DataColumn(label: Text('Date', style: TextStyle(fontSize: 25))),
+    ];
+  }
+
+  Future _createRows() async {
+    List list = await read();
+    List<DataRow> dataRow = [];
+    DataRow data;
+    for (int i = 0; i < list.length; i++) {
+      for (int j = 0; j < 1; j++) {
+        data = DataRow(cells: [
+          DataCell(Text(
+            list[i][j],
+            style: TextStyle(fontSize: 20),
+          )),
+          DataCell(Text(
+            list[i][j],
+            style: TextStyle(fontSize: 20),
+          )),
+        ]);
+        dataRow.add(data);
       }
     }
-    return dataRow;
-    /**/
-  }*/
+  }
 }
