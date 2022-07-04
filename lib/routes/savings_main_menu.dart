@@ -83,12 +83,19 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           FutureBuilder<DataTable>(
-                            future: _createDataTable(),
+                            future:
+                            Future.delayed(const Duration(seconds: 5), () {
+                              return DataTable(
+                                  columnSpacing: 100,
+                                  columns: _createColumns(),
+                                  rows:
+                                  _createRows()); // Prints after 1 second.
+                            }),
                             builder: (context, snapshot) {
                               //_createDataTable();
                               if (snapshot.connectionState ==
                                   ConnectionState.done) {
-                                return Text("${snapshot.data}");
+                                return _createDataTable();
                               } else {
                                 // A Widget to show while the value loads
                                 return Text('Loading');
@@ -200,16 +207,9 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
         ]);
   }*/
 
-  Future<DataTable> _createDataTable() async {
-    Future.delayed(const Duration(seconds: 5), () {
-      print("hello");
-      return DataTable(
-          columnSpacing: 100,
-          columns: _createColumns(),
-          rows: _createRows()); // Prints after 1 second.
-    });
+  Future<Widget> _createDataTable() async {
     return DataTable(
-        columnSpacing: 200, columns: _createColumns(), rows: _createRows());
+        columnSpacing: 100, columns: _createColumns(), rows: await _createRows());
 
     // await _createRows())
   }
@@ -221,40 +221,44 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     ];
   }
 
-  _createRows() {
-    return [
-      DataRow(cells: [
-        DataCell(Text('#100')),
-        DataCell(Text('Flutter Basics')),
-      ]),
-      DataRow(
-        cells: [
-          DataCell(Text('#101')),
-          DataCell(Text('Dart Internals')),
-        ],
-      ),
-    ];
-    /*List list = await read();
+  Future<List<DataRow>> _createRows() async {
+    List list = await read();
     List<DataRow> dataRow = [];
-    DataCell cell;
-    DataCell cell1;
-    DataRow data;
-    print(list);
+
     for (int i = 0; i < list.length; i++) {
       for (int j = 0; j < 1; j++) {
-        data = DataRow(
+        dataRow.add(DataRow(
           cells: [
-            cell = DataCell(const Text(
+            DataCell(const Text(
               "Hello",
               style: TextStyle(fontSize: 20),
             )),
-            cell1 = DataCell(Text(
+            DataCell(Text(
               list[i][j],
               style: TextStyle(fontSize: 20),
             )),
           ].toList(),
-        );
+        ));
       }
-    }*/
+    }
+    return dataRow;
+
+  }
+}
+
+
+      /*DataRow(cells: [
+        DataCell(Text("400")),
+        DataCell(Text('06/17/2022')),
+      ]),
+      DataRow(
+        cells: [
+          DataCell(Text('500')),
+          DataCell(Text('07/04/2022')),
+        ],
+      ),
+    ];
+
+    }
   }
 }
