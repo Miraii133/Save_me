@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -81,19 +82,18 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          FutureBuilder(
+                          FutureBuilder<DataTable>(
+                            future: _createDataTable(),
                             builder: (context, snapshot) {
                               //_createDataTable();
                               if (snapshot.connectionState ==
                                   ConnectionState.done) {
-                                _createDataTable();
-                                return Text("nya");
+                                return Text("${snapshot.data}");
                               } else {
                                 // A Widget to show while the value loads
                                 return Text('Loading');
                               }
                             },
-                            future: _createDataTable(),
                           )
                         ]),
                   )),
@@ -201,10 +201,17 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
   }*/
 
   Future<DataTable> _createDataTable() async {
+    Future.delayed(const Duration(seconds: 5), () {
+      print("hello");
+      return DataTable(
+          columnSpacing: 100,
+          columns: _createColumns(),
+          rows: _createRows()); // Prints after 1 second.
+    });
     return DataTable(
-        columnSpacing: 100,
-        columns: _createColumns(),
-        rows: await _createRows());
+        columnSpacing: 200, columns: _createColumns(), rows: _createRows());
+
+    // await _createRows())
   }
 
   List<DataColumn> _createColumns() {
@@ -214,24 +221,40 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     ];
   }
 
-  Future _createRows() async {
-    List list = await read();
+  _createRows() {
+    return [
+      DataRow(cells: [
+        DataCell(Text('#100')),
+        DataCell(Text('Flutter Basics')),
+      ]),
+      DataRow(
+        cells: [
+          DataCell(Text('#101')),
+          DataCell(Text('Dart Internals')),
+        ],
+      ),
+    ];
+    /*List list = await read();
     List<DataRow> dataRow = [];
+    DataCell cell;
+    DataCell cell1;
     DataRow data;
+    print(list);
     for (int i = 0; i < list.length; i++) {
       for (int j = 0; j < 1; j++) {
-        data = DataRow(cells: [
-          DataCell(Text(
-            list[i][j],
-            style: TextStyle(fontSize: 20),
-          )),
-          DataCell(Text(
-            list[i][j],
-            style: TextStyle(fontSize: 20),
-          )),
-        ]);
-        dataRow.add(data);
+        data = DataRow(
+          cells: [
+            cell = DataCell(const Text(
+              "Hello",
+              style: TextStyle(fontSize: 20),
+            )),
+            cell1 = DataCell(Text(
+              list[i][j],
+              style: TextStyle(fontSize: 20),
+            )),
+          ].toList(),
+        );
       }
-    }
+    }*/
   }
 }
