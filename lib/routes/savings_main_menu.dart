@@ -18,10 +18,12 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     {'amount': 5000, 'date': "07/16/2022"},
     {'amount': 50, 'date': "07/15/2011"},
     {'amount': 60, 'date': "07/13/2011"},
-    {'amount': 70, 'date': "07/12/2011"}
+    {'amount': 70, 'date': "07/12/2011"},
+    {'amount': 50, 'date': "02/15/2013"}
   ];
   @override
   Widget build(BuildContext context) {
+    write(_books);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
@@ -202,8 +204,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
 
   Future<List<DataRow>> _createRows() async {
     List list = await read();
-    var listToString = List<String>.from(list);
-    print(listToString[0]);
     List<DataRow> dataRow = [];
     int j = 0;
     for (int i = 0; i < list.length; i++) {
@@ -211,11 +211,11 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
         DataRow(
           cells: [
             DataCell(Text(
-              "ba",
+              list[i++][0],
               style: TextStyle(fontSize: 20),
             )),
             DataCell(Text(
-              list.toString()[i],
+              list[i][0],
               style: TextStyle(fontSize: 20),
             )),
           ].toList(),
