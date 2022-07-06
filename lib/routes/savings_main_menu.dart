@@ -15,7 +15,7 @@ class SavingsMainMenu extends StatefulWidget {
 
 class _SavingsMainMenuState extends State<SavingsMainMenu> {
   List<Map> _books = [
-    {'amount': 5000, 'date': "07/16/2022"},
+    {'amount': 500, 'date': "07/16/2022"},
     {'amount': 50, 'date': "07/15/2011"},
     {'amount': 60, 'date': "07/13/2011"},
     {'amount': 70, 'date': "07/12/2011"},
@@ -28,10 +28,10 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
         actions: [
-          TextButton(
+          /*TextButton(
               onPressed: () {},
               child: const Text("Edit",
-                  style: TextStyle(fontSize: 20, color: Colors.white)))
+                  style: TextStyle(fontSize: 20, color: Colors.white)))*/
         ],
         title: const Text("Savings",
             style: TextStyle(
@@ -210,14 +210,36 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       dataRow.add(
         DataRow(
           cells: [
-            DataCell(Text(
+            /*DataCell(Text(
               list[i++][0],
               style: TextStyle(fontSize: 20),
-            )),
-            DataCell(Text(
-              list[i][0],
-              style: TextStyle(fontSize: 20),
-            )),
+            )),*/
+            DataCell(
+                TextFormField(
+                  style: TextStyle(fontSize: 20),
+                  initialValue: list[i++][0],
+                  keyboardType: TextInputType.number,
+                  onFieldSubmitted: (val) {
+                    setState(() {
+                      print(val);
+                      //you can do anything you want
+                    });
+                  },
+                ),
+                showEditIcon: false),
+            DataCell(
+                TextFormField(
+                  style: TextStyle(fontSize: 20),
+                  initialValue: list[i][0],
+                  keyboardType: TextInputType.datetime,
+                  onFieldSubmitted: (val) {
+                    setState(() {
+                      print(val);
+                      //you can do anything you want
+                    });
+                  },
+                ),
+                showEditIcon: false),
           ].toList(),
         ),
       );
