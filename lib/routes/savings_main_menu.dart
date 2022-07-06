@@ -20,7 +20,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     {'amount': 60, 'date': "07/13/2011"},
     {'amount': 70, 'date': "07/12/2011"}
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,20 +81,16 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          FutureBuilder<DataTable>(
-                            future:
-                            Future.delayed(const Duration(seconds: 5), () {
-                              return DataTable(
-                                  columnSpacing: 100,
-                                  columns: _createColumns(),
-                                  rows:
-                                  _createRows()); // Prints after 1 second.
-                            }),
-                            builder: (context, snapshot) {
-                              //_createDataTable();
+                          FutureBuilder(
+                            // waits for _createDataTable future
+                            future: Future.wait([_createDataTable()]),
+                            builder: (context,
+                                // AsyncSnapshot just enables indexes
+                                // for
+                                AsyncSnapshot<List<dynamic>> snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.done) {
-                                return _createDataTable();
+                                return snapshot.data![0];
                               } else {
                                 // A Widget to show while the value loads
                                 return Text('Loading');
@@ -189,27 +184,11 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     return listOfData;
   }
 
-  /*createTable() async {
-    Future<List> _futureList = read();
-    List list = await _futureList;
-    print(list);
-    for (int i = 0; i < list.length; i++) {
-      for (int j = 0; j <= 1; j++) {
-        dataRow = DataRow(cells: [
-          DataCell(Text(
-            list[i][j],
-            style: TextStyle(fontSize: 20),
-          )),
-          DataCell(Text(
-            list[i][j]['date'].toString(),
-            style: TextStyle(fontSize: 20),
-          )),
-        ]);
-  }*/
-
   Future<Widget> _createDataTable() async {
     return DataTable(
-        columnSpacing: 100, columns: _createColumns(), rows: await _createRows());
+        columnSpacing: 100,
+        columns: _createColumns(),
+        rows: await _createRows());
 
     // await _createRows())
   }
@@ -223,42 +202,26 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
 
   Future<List<DataRow>> _createRows() async {
     List list = await read();
+    var listToString = List<String>.from(list);
+    print(listToString[0]);
     List<DataRow> dataRow = [];
-
+    int j = 0;
     for (int i = 0; i < list.length; i++) {
-      for (int j = 0; j < 1; j++) {
-        dataRow.add(DataRow(
+      dataRow.add(
+        DataRow(
           cells: [
-            DataCell(const Text(
-              "Hello",
+            DataCell(Text(
+              "ba",
               style: TextStyle(fontSize: 20),
             )),
             DataCell(Text(
-              list[i][j],
+              list.toString()[i],
               style: TextStyle(fontSize: 20),
             )),
           ].toList(),
-        ));
-      }
+        ),
+      );
     }
     return dataRow;
-
-  }
-}
-
-
-      /*DataRow(cells: [
-        DataCell(Text("400")),
-        DataCell(Text('06/17/2022')),
-      ]),
-      DataRow(
-        cells: [
-          DataCell(Text('500')),
-          DataCell(Text('07/04/2022')),
-        ],
-      ),
-    ];
-
-    }
   }
 }
