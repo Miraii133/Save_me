@@ -95,7 +95,7 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                                 return snapshot.data![0];
                               } else {
                                 // A Widget to show while the value loads
-                                return Text('Loading');
+                                return CircularProgressIndicator();
                               }
                             },
                           )
@@ -229,6 +229,9 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                 showEditIcon: false),
             DataCell(
                 TextFormField(
+                  onChanged: (val) {
+                    print(val);
+                  },
                   style: TextStyle(fontSize: 20),
                   initialValue: list[i][0],
                   keyboardType: TextInputType.datetime,
