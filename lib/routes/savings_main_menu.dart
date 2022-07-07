@@ -207,6 +207,7 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     List<DataRow> dataRow = [];
     int j = 0;
     for (int i = 0; i < list.length; i++) {
+      int cellIndex = i;
       dataRow.add(
         DataRow(
           cells: [
@@ -222,6 +223,7 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                   onFieldSubmitted: (val) {
                     setState(() {
                       print(val);
+                      print(i);
                       //you can do anything you want
                     });
                   },
@@ -229,15 +231,12 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                 showEditIcon: false),
             DataCell(
                 TextFormField(
-                  onChanged: (val) {
-                    print(val);
-                  },
                   style: TextStyle(fontSize: 20),
                   initialValue: list[i][0],
                   keyboardType: TextInputType.datetime,
-                  onFieldSubmitted: (val) {
+                  onFieldSubmitted: (newValue) {
                     setState(() {
-                      print(val);
+                      _changeTableData(newValue, cellIndex);
                       //you can do anything you want
                     });
                   },
@@ -248,5 +247,11 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       );
     }
     return dataRow;
+  }
+
+  void _changeTableData(String newValue, int cellIndex) {
+    print(newValue);
+    print("ba");
+    print(cellIndex);
   }
 }
