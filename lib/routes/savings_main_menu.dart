@@ -21,9 +21,13 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     {'amount': 70, 'date': "07/12/2011"},
     {'amount': 50, 'date': "02/15/2013"}
   ];
+
+  String dataValues =
+      "500, 07/16/5022, 50, 07/15/2011, 60, 07/13/2011, 70, 07/12/2011, 50, 02/15/2013";
+
   @override
   Widget build(BuildContext context) {
-    write(_books);
+    write(dataValues);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
@@ -108,10 +112,11 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     );
   }
 
-  write(List text) async {
+  write(String dataValues) async {
     final Directory directory = await getApplicationDocumentsDirectory();
     final File file = File('${directory.path}/my_file.txt');
-    await file.writeAsString(text.toString());
+    await file.writeAsString(dataValues);
+    print(dataValues);
   }
 
   Future<List> read() async {
@@ -168,6 +173,9 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
           isStopOfWord = false;
         }
       }
+
+      // Separates elements in lists into 2 determined
+      // by chunkSize
       var chunks = [];
       int chunkSize = 2;
       for (var i = 0; i < listOfData.length; i += chunkSize) {
@@ -207,7 +215,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     List<DataRow> dataRow = [];
     int j = 0;
     for (int i = 0; i < list.length; i++) {
-      int cellIndex = i;
       dataRow.add(
         DataRow(
           cells: [
@@ -236,7 +243,8 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                   keyboardType: TextInputType.datetime,
                   onFieldSubmitted: (newValue) {
                     setState(() {
-                      _changeTableData(newValue, cellIndex);
+                      int cellIndex = i;
+                      _changeTableData(list, newValue, cellIndex);
                       //you can do anything you want
                     });
                   },
@@ -249,9 +257,9 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     return dataRow;
   }
 
-  void _changeTableData(String newValue, int cellIndex) {
-    print(newValue);
-    print("ba");
-    print(cellIndex);
+  void _changeTableData(List list, String newValue, int cellIndex) {
+    list.insert(cellIndex, newValue);
+    list.removeAt(cellIndex + 1);
+    write(dataValues);
   }
 }
