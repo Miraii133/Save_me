@@ -14,15 +14,6 @@ class SavingsMainMenu extends StatefulWidget {
 }
 
 class _SavingsMainMenuState extends State<SavingsMainMenu> {
-  List<Map> _books = [
-    {'amount': 500, 'date': "07/16/2022"},
-    {'amount': 50, 'date': "07/15/2011"},
-    {'amount': 60, 'date': "07/13/2011"},
-    {'amount': 70, 'date': "07/12/2011"},
-    {'amount': 50, 'date': "02/15/2013"}
-  ];
-  String dataValues =
-      "500, 07/16/5022, 50, 07/15/2011, 60, 07/13/2011, 70, 07/12/2011, 50, 02/15/2013";
   @override
   Widget build(BuildContext context) {
     //write(dataValues);
