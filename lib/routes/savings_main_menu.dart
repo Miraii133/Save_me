@@ -21,13 +21,11 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     {'amount': 70, 'date': "07/12/2011"},
     {'amount': 50, 'date': "02/15/2013"}
   ];
-
   String dataValues =
       "500, 07/16/5022, 50, 07/15/2011, 60, 07/13/2011, 70, 07/12/2011, 50, 02/15/2013";
-
   @override
   Widget build(BuildContext context) {
-    write(dataValues);
+    //write(dataValues);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
@@ -124,7 +122,7 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       final Directory directory = await getApplicationDocumentsDirectory();
       final File file = File('${directory.path}/my_file.txt');
       String dataValues = await file.readAsString();
-      print("data values");
+      print("new val");
       print(dataValues);
       final regexp = RegExp('^([^,])+');
       RegExpMatch? match;
@@ -140,8 +138,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
         // removes , after removing the matched_value
         dataValues = dataValues.replaceFirst(", ", "");
       }
-      print("to string");
-      print(dataFromString.toString());
     } catch (e) {
       print("Couldn't read file");
     }
@@ -171,51 +167,53 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     List list = await read();
     List<DataRow> dataRow = [];
     int j = 0;
-    print(list.length);
     for (int i = 0; i < list.length; i++) {
-      print(i);
-
-      DataRow(cells: [
+      dataRow.add(DataRow(cells: [
         DataCell(
             TextFormField(
               style: TextStyle(fontSize: 20),
-              initialValue: list[i],
+              initialValue: list[i++],
               keyboardType: TextInputType.number,
               onFieldSubmitted: (val) {
                 setState(() {
                   print(val);
                   print(i);
+                });
+              },
+            ),
+            showEditIcon: false),
+        DataCell(
+            TextFormField(
+              style: TextStyle(fontSize: 20),
+              initialValue: list[i++],
+              keyboardType: TextInputType.datetime,
+              onFieldSubmitted: (newValue) {
+                setState(() {
+                  int cellIndex = i;
+                  _changeTableData(list, newValue, cellIndex);
                   //you can do anything you want
                 });
               },
             ),
             showEditIcon: false),
-      ]);
-      DataRow(
-        cells: [
-          DataCell(
-              TextFormField(
-                style: TextStyle(fontSize: 20),
-                initialValue: list[i],
-                keyboardType: TextInputType.datetime,
-                onFieldSubmitted: (newValue) {
-                  setState(() {
-                    int cellIndex = i;
-                    _changeTableData(list, newValue, cellIndex);
-                    //you can do anything you want
-                  });
-                },
-              ),
-              showEditIcon: false),
-        ],
-      );
+      ]));
+      // decrements to return index value after incrementing
+      // actually have no idea why the increments
+      // are working, but it works so.
+      i--;
     }
     return dataRow;
   }
 
   void _changeTableData(List list, String newValue, int cellIndex) {
     list.insert(cellIndex, newValue);
+    // removes the next element of list
+    // after adding the new value in list;
     list.removeAt(cellIndex + 1);
-    write(dataValues);
+
+    // converts list to a string
+    // write() needs a string
+    // for writeAsString()
+    write(list.toString());
   }
 }
