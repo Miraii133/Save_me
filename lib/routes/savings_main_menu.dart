@@ -171,40 +171,43 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     List list = await read();
     List<DataRow> dataRow = [];
     int j = 0;
+    print(list.length);
     for (int i = 0; i < list.length; i++) {
-      dataRow.add(
-        DataRow(
-          cells: [
-            DataCell(
-                TextFormField(
-                  style: TextStyle(fontSize: 20),
-                  initialValue: list[i],
-                  keyboardType: TextInputType.number,
-                  onFieldSubmitted: (val) {
-                    setState(() {
-                      print(val);
-                      print(i);
-                      //you can do anything you want
-                    });
-                  },
-                ),
-                showEditIcon: false),
-            DataCell(
-                TextFormField(
-                  style: TextStyle(fontSize: 20),
-                  initialValue: list[i++],
-                  keyboardType: TextInputType.datetime,
-                  onFieldSubmitted: (newValue) {
-                    setState(() {
-                      int cellIndex = i;
-                      _changeTableData(list, newValue, cellIndex);
-                      //you can do anything you want
-                    });
-                  },
-                ),
-                showEditIcon: false),
-          ].toList(),
-        ),
+      print(i);
+
+      DataRow(cells: [
+        DataCell(
+            TextFormField(
+              style: TextStyle(fontSize: 20),
+              initialValue: list[i],
+              keyboardType: TextInputType.number,
+              onFieldSubmitted: (val) {
+                setState(() {
+                  print(val);
+                  print(i);
+                  //you can do anything you want
+                });
+              },
+            ),
+            showEditIcon: false),
+      ]);
+      DataRow(
+        cells: [
+          DataCell(
+              TextFormField(
+                style: TextStyle(fontSize: 20),
+                initialValue: list[i],
+                keyboardType: TextInputType.datetime,
+                onFieldSubmitted: (newValue) {
+                  setState(() {
+                    int cellIndex = i;
+                    _changeTableData(list, newValue, cellIndex);
+                    //you can do anything you want
+                  });
+                },
+              ),
+              showEditIcon: false),
+        ],
       );
     }
     return dataRow;

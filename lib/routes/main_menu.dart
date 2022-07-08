@@ -3,7 +3,7 @@ import 'package:save_me/routes/report_main_menu.dart';
 import 'package:save_me/routes/savings_main_menu.dart';
 import 'expenses_main_menu.dart';
 
-var budget = 20;
+var budget = "2,020";
 
 class MainMenu extends StatelessWidget {
   const MainMenu({Key? key}) : super(key: key);
