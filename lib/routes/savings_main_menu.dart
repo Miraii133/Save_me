@@ -113,9 +113,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       final Directory directory = await getApplicationDocumentsDirectory();
       final File file = File('${directory.path}/my_file.txt');
       String dataValues = await file.readAsString();
-      print("new val");
-
-      print(dataValues);
       // remove auto generated [ and ] from turning
       // strings to maps
       dataValues = dataValues.replaceAll("[", "");
@@ -173,9 +170,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                 setState(() {
                   i--;
                   int cellIndex = i;
-                  print(list);
-                  print(newValue);
-                  print(cellIndex);
 
                   _changeTableData(list, newValue, cellIndex);
                 });
@@ -210,13 +204,19 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     // removes the next element of list
     // after adding the new value in list;
     list.removeAt(cellIndex + 1);
-    print("new list");
-    print(list);
     // converts list to a string
     // write() needs a string
     // for writeAsString()
     write(list.toString());
+    _getTotalSavings(list);
   }
 
-  void _getTotalSavings(List list) {}
+  void _getTotalSavings(List list) {
+    List.p
+    int? totalSavings = 0;
+    for (int i = 0; i < list.length; i++) {
+      totalSavings = totalSavings + list[i] as int;
+      print(totalSavings);
+    }
+  }
 }
