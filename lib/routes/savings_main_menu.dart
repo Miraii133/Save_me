@@ -114,7 +114,12 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       final File file = File('${directory.path}/my_file.txt');
       String dataValues = await file.readAsString();
       print("new val");
+
       print(dataValues);
+      // remove auto generated [ and ] from turning
+      // strings to maps
+      dataValues = dataValues.replaceAll("[", "");
+      dataValues = dataValues.replaceAll("]", "");
       final regexp = RegExp('^([^,])+');
       RegExpMatch? match;
       var matchedValue;
@@ -157,7 +162,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
   Future<List<DataRow>> _createRows() async {
     List list = await read();
     List<DataRow> dataRow = [];
-    int j = 0;
     for (int i = 0; i < list.length; i++) {
       dataRow.add(DataRow(cells: [
         DataCell(
@@ -165,10 +169,15 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
               style: TextStyle(fontSize: 20),
               initialValue: list[i++],
               keyboardType: TextInputType.number,
-              onFieldSubmitted: (val) {
+              onFieldSubmitted: (newValue) {
                 setState(() {
-                  print(val);
-                  print(i);
+                  i--;
+                  int cellIndex = i;
+                  print(list);
+                  print(newValue);
+                  print(cellIndex);
+
+                  _changeTableData(list, newValue, cellIndex);
                 });
               },
             ),
@@ -190,7 +199,7 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       ]));
       // decrements to return index value after incrementing
       // actually have no idea why the increments
-      // are working, but it works so.
+      // are working, but it works
       i--;
     }
     return dataRow;
@@ -201,10 +210,13 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     // removes the next element of list
     // after adding the new value in list;
     list.removeAt(cellIndex + 1);
-
+    print("new list");
+    print(list);
     // converts list to a string
     // write() needs a string
     // for writeAsString()
     write(list.toString());
   }
+
+  void _getTotalSavings(List list) {}
 }
