@@ -116,82 +116,39 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     final Directory directory = await getApplicationDocumentsDirectory();
     final File file = File('${directory.path}/my_file.txt');
     await file.writeAsString(dataValues);
-    print(dataValues);
   }
 
   Future<List> read() async {
-    String text = "";
-
-    // listOfData contains all data after
-    // textFile is read.
-    var listOfData = [];
-    var chunks = [];
+    List dataFromString = [];
     try {
       final Directory directory = await getApplicationDocumentsDirectory();
       final File file = File('${directory.path}/my_file.txt');
-      text = await file.readAsString();
-      var startFlagChar = ':';
-      var stopFlagChars = [',', '{', '}'];
-      var excludedChars = [' ', ':'];
-      bool isStartOfWord = false;
-      bool isStopOfWord = false;
-      var words = <String>[];
-      for (var char in text.runes) {
-        var charToString = String.fromCharCode(char);
-
-        // if char detects flag of start
-        if (startFlagChar == charToString) {
-          isStartOfWord = true;
-          isStopOfWord = false;
-        } else {
-          for (var i = 0; i < stopFlagChars.length; i++) {
-            // stopFlag does not contain whatever the
-            // char is and start word already true
-            if (stopFlagChars.contains(charToString) && isStartOfWord) {
-              isStartOfWord = false;
-              isStopOfWord = true;
-            }
-          }
-        }
-        // only puts char if : is detected, and ends if stopFlag is detected
-        // also excludes excluded characters.
-        // !excludedChars.contains(charToString)
-        if (isStartOfWord &&
-            !isStopOfWord &&
-            !excludedChars.contains(charToString)) {
-          words.add(charToString);
-        }
-
-        // if char is already a stop word, join the
-        // words list and add in listOfData.
-        // clear words list to store another
-        // set of words
-        if (!isStartOfWord && isStopOfWord) {
-          var joinedWords = [words.join()];
-          listOfData.add(joinedWords);
-          words.clear();
-          isStopOfWord = false;
-        }
+      String dataValues = await file.readAsString();
+      print("data values");
+      print(dataValues);
+      final regexp = RegExp('^([^,])+');
+      RegExpMatch? match;
+      var matchedValue;
+      int dataAmount = dataValues.split(", ").length;
+      for (int i = 0; i < dataAmount; i++) {
+        match = regexp.firstMatch(dataValues);
+        matchedValue = match?.group(0);
+        dataFromString.add(matchedValue);
+        // clears matched_value and deletes it in dataValues
+        // for next string to be pushed to index 0
+        dataValues = dataValues.replaceFirst(matchedValue ?? "", "");
+        // removes , after removing the matched_value
+        dataValues = dataValues.replaceFirst(", ", "");
       }
-
-      // Separates elements in lists into 2 determined
-      // by chunkSize
-      var chunks = [];
-      int chunkSize = 2;
-      for (var i = 0; i < listOfData.length; i += chunkSize) {
-        chunks.add(listOfData.sublist(
-            i,
-            i + chunkSize > listOfData.length
-                ? listOfData.length
-                : i + chunkSize));
-      }
+      print("to string");
+      print(dataFromString.toString());
     } catch (e) {
       print("Couldn't read file");
     }
 
     // returns a future value of listOfData asynchronously
     // once entire method is finished
-    return listOfData;
+    return dataFromString;
   }
 
   Future<Widget> _createDataTable() async {
@@ -218,14 +175,10 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       dataRow.add(
         DataRow(
           cells: [
-            /*DataCell(Text(
-              list[i++][0],
-              style: TextStyle(fontSize: 20),
-            )),*/
             DataCell(
                 TextFormField(
                   style: TextStyle(fontSize: 20),
-                  initialValue: list[i++][0],
+                  initialValue: list[i],
                   keyboardType: TextInputType.number,
                   onFieldSubmitted: (val) {
                     setState(() {
@@ -239,7 +192,7 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
             DataCell(
                 TextFormField(
                   style: TextStyle(fontSize: 20),
-                  initialValue: list[i][0],
+                  initialValue: list[i++],
                   keyboardType: TextInputType.datetime,
                   onFieldSubmitted: (newValue) {
                     setState(() {
