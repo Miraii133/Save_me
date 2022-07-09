@@ -55,7 +55,11 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                           // for
                           AsyncSnapshot<List<dynamic>> snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
-                          return snapshot.data![0];
+                          return Text(
+                            '${snapshot.data}',
+                            style:
+                                TextStyle(fontSize: 40, color: Colors.yellow),
+                          );
                         } else {
                           // A Widget to show while the value loads
                           return CircularProgressIndicator();
