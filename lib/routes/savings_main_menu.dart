@@ -47,11 +47,27 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                   children: [
                     const Text("Savings",
                         style: TextStyle(fontSize: 35, color: Colors.yellow)),
-                    Text("$budget",
+                    FutureBuilder(
+                      // waits for _createDataTable future
+                      future: Future.wait([_getTotalSavings()]),
+                      builder: (context,
+                          // AsyncSnapshot just enables indexes
+                          // for
+                          AsyncSnapshot<List<dynamic>> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return snapshot.data![0];
+                        } else {
+                          // A Widget to show while the value loads
+                          return CircularProgressIndicator();
+                        }
+                      },
+                    )
+
+                    /*Text("$budget",
                         style: const TextStyle(
                             fontSize: 40,
                             fontWeight: FontWeight.bold,
-                            color: Colors.yellow)),
+                            color: Colors.yellow)),*/
                   ],
                 ),
               ),
@@ -208,15 +224,16 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     // write() needs a string
     // for writeAsString()
     write(list.toString());
-    _getTotalSavings(list);
+    _getTotalSavings();
   }
 
-  void _getTotalSavings(List list) {
-    List.p
-    int? totalSavings = 0;
+  Future<int> _getTotalSavings() async {
+    List list = await read();
+    int totalSavings = 0;
     for (int i = 0; i < list.length; i++) {
-      totalSavings = totalSavings + list[i] as int;
-      print(totalSavings);
+      totalSavings = (totalSavings + int.parse(list[i++]));
     }
+    //updateTotalSavings(totalSavings);
+    return totalSavings;
   }
 }
