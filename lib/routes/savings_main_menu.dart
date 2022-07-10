@@ -52,13 +52,28 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                       future: Future.wait([_getTotalSavings()]),
                       builder: (context,
                           // AsyncSnapshot just enables indexes
-                          // for
+                          // for multiple widgets
                           AsyncSnapshot<List<dynamic>> snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
+                          String newSnapshotData = "";
+
+                          // removes [ and ] when snapshot.data
+                          // is received from _getTotalSavings()
+                          // snapshot.data will automatically have
+                          // [ and ], condition removes it.
+                          if (snapshot.data.toString().contains("[") ||
+                              snapshot.data.toString().contains("]")) {
+                            newSnapshotData =
+                                snapshot.data.toString().replaceAll("[", "");
+                            newSnapshotData =
+                                newSnapshotData.replaceAll("]", "");
+                          }
                           return Text(
-                            '${snapshot.data}',
-                            style:
-                                TextStyle(fontSize: 40, color: Colors.yellow),
+                            newSnapshotData,
+                            style: const TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.yellow),
                           );
                         } else {
                           // A Widget to show while the value loads
@@ -66,12 +81,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                         }
                       },
                     )
-
-                    /*Text("$budget",
-                        style: const TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.yellow)),*/
                   ],
                 ),
               ),
@@ -79,12 +88,12 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
             SizedBox(
               height: 20,
             ),
-            Center(
+            const Center(
               child: Text(
                 "History",
                 style: TextStyle(
                     fontSize: 25,
-                    color: Colors.blue[900],
+                    color: Colors.blue,
                     fontWeight: FontWeight.bold),
               ),
             ),
@@ -154,7 +163,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     } catch (e) {
       print("Couldn't read file");
     }
-
     // returns a future value of listOfData asynchronously
     // once entire method is finished
     return dataFromString;
@@ -165,14 +173,12 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
         columnSpacing: 100,
         columns: _createColumns(),
         rows: await _createRows());
-
-    // await _createRows())
   }
 
   List<DataColumn> _createColumns() {
     return [
-      DataColumn(label: Text('Amount', style: TextStyle(fontSize: 25))),
-      DataColumn(label: Text('Date', style: TextStyle(fontSize: 25))),
+      const DataColumn(label: Text('Amount', style: TextStyle(fontSize: 25))),
+      const DataColumn(label: Text('Date', style: TextStyle(fontSize: 25))),
     ];
   }
 
@@ -190,7 +196,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                 setState(() {
                   i--;
                   int cellIndex = i;
-
                   _changeTableData(list, newValue, cellIndex);
                 });
               },
