@@ -13,6 +13,12 @@ class SavingsMainMenu extends StatefulWidget {
   State<SavingsMainMenu> createState() => _SavingsMainMenuState();
 }
 
+@override
+void initState() {
+  _SavingsMainMenuState savings = _SavingsMainMenuState();
+  initState();
+}
+
 class _SavingsMainMenuState extends State<SavingsMainMenu> {
   @override
   Widget build(BuildContext context) {
@@ -186,36 +192,49 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     List list = await read();
     List<DataRow> dataRow = [];
     for (int i = 0; i < list.length; i++) {
-      dataRow.add(DataRow(cells: [
-        DataCell(
-            TextFormField(
-              style: TextStyle(fontSize: 20),
-              initialValue: list[i++],
-              keyboardType: TextInputType.number,
-              onFieldSubmitted: (newValue) {
-                setState(() {
-                  i--;
-                  int cellIndex = i;
-                  _changeTableData(list, newValue, cellIndex);
-                });
-              },
-            ),
-            showEditIcon: false),
-        DataCell(
-            TextFormField(
-              style: TextStyle(fontSize: 20),
-              initialValue: list[i++],
-              keyboardType: TextInputType.datetime,
-              onFieldSubmitted: (newValue) {
-                setState(() {
-                  int cellIndex = i;
-                  _changeTableData(list, newValue, cellIndex);
-                  //you can do anything you want
-                });
-              },
-            ),
-            showEditIcon: false),
-      ]));
+      dataRow.add(
+        DataRow(
+          cells: [
+            DataCell(
+                TextFormField(
+                  style: TextStyle(fontSize: 20),
+                  // increments by 1 to ensure that
+                  // the same value in amount row
+                  // and date row does not duplicate
+                  initialValue: list[i++],
+                  keyboardType: TextInputType.number,
+                  onFieldSubmitted: (newValue) {
+                    setState(() {
+                      // decrements i again
+                      // to make sure that cellIndex
+                      // is correct.
+                      i--;
+                      int cellIndex = i;
+                      _changeTableData(list, newValue, cellIndex);
+                    });
+                  },
+                ),
+                showEditIcon: false),
+            DataCell(
+                TextFormField(
+                  style: TextStyle(fontSize: 20),
+                  initialValue: list[i++],
+                  keyboardType: TextInputType.datetime,
+                  onFieldSubmitted: (newValue) {
+                    setState(() {
+                      int cellIndex = i;
+                      _changeTableData(list, newValue, cellIndex);
+                      //you can do anything you want
+                    });
+                  },
+                ),
+                showEditIcon: false),
+          ],
+          /*onSelectChanged: (bool? selected) {
+            print(_selected[i]);
+          },*/
+        ),
+      );
       // decrements to return index value after incrementing
       // actually have no idea why the increments
       // are working, but it works
@@ -234,6 +253,12 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     // for writeAsString()
     write(list.toString());
     _getTotalSavings();
+  }
+
+  Future<int> _getTotalEntries() async {
+    List list = await read();
+    int totalEntries = list.length;
+    return totalEntries;
   }
 
   Future<int> _getTotalSavings() async {
