@@ -1,10 +1,6 @@
-import 'dart:developer';
 import 'dart:io';
-
-import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'main_menu.dart';
 
 class SavingsMainMenu extends StatefulWidget {
   const SavingsMainMenu({Key? key}) : super(key: key);
@@ -23,6 +19,8 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
   @override
   Widget build(BuildContext context) {
     //write(dataValues);
+    //_removeData();
+    _addData();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
@@ -197,7 +195,7 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
           cells: [
             DataCell(
                 TextFormField(
-                  style: TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20),
                   // increments by 1 to ensure that
                   // the same value in amount row
                   // and date row does not duplicate
@@ -224,15 +222,13 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                     setState(() {
                       int cellIndex = i;
                       _changeTableData(list, newValue, cellIndex);
-                      //you can do anything you want
                     });
                   },
                 ),
                 showEditIcon: false),
           ],
-          /*onSelectChanged: (bool? selected) {
-            print(_selected[i]);
-          },*/
+          //,
+          onSelectChanged: (bool? selected) {},
         ),
       );
       // decrements to return index value after incrementing
@@ -267,7 +263,21 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     for (int i = 0; i < list.length; i++) {
       totalSavings = (totalSavings + int.parse(list[i++]));
     }
-    //updateTotalSavings(totalSavings);
     return totalSavings;
+  }
+
+  void _removeData() async {
+    List list = await read();
+    print(list);
+    list.removeAt(0);
+    list.removeAt(0);
+    print(list);
+  }
+
+  void _addData() async {
+    List list = await read();
+    list.insert(0, "1000");
+    list.insert(1, "07/15/2021");
+    print(list);
   }
 }
