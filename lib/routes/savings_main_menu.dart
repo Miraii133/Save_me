@@ -17,10 +17,11 @@ void initState() {
 
 class _SavingsMainMenuState extends State<SavingsMainMenu> {
   @override
+  String dataValues = "600, 07/10/2022, 145, 07/15/2022";
   Widget build(BuildContext context) {
     //write(dataValues);
     //_removeData();
-    _addData();
+    //_addData();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
@@ -84,7 +85,17 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                           return CircularProgressIndicator();
                         }
                       },
-                    )
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          _addData();
+                        },
+                        child: Text("Add")),
+                    ElevatedButton(
+                        onPressed: () {
+                          _removeData();
+                        },
+                        child: Text("Remove")),
                   ],
                 ),
               ),
@@ -169,6 +180,7 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     }
     // returns a future value of listOfData asynchronously
     // once entire method is finished
+
     return dataFromString;
   }
 
@@ -268,16 +280,18 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
 
   void _removeData() async {
     List list = await read();
-    print(list);
+    // removes both the value
+    // in amount and date
     list.removeAt(0);
     list.removeAt(0);
-    print(list);
+    write(list.toString());
   }
 
   void _addData() async {
     List list = await read();
-    list.insert(0, "1000");
-    list.insert(1, "07/15/2021");
+    list.insert(0, "");
+    list.insert(1, "");
+    write(list.toString());
     print(list);
   }
 }
