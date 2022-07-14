@@ -215,14 +215,13 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                   initialValue: list[i++],
                   keyboardType: TextInputType.number,
                   onFieldSubmitted: (newValue) {
-                    setState(() {
-                      // decrements i again
-                      // to make sure that cellIndex
-                      // is correct.
-                      i--;
-                      int cellIndex = i;
-                      _changeTableData(list, newValue, cellIndex);
-                    });
+                    // decrements i again
+                    // to make sure that cellIndex
+                    // is correct.
+                    i--;
+                    int cellIndex = i;
+
+                    _changeTableData(list, newValue, cellIndex);
                   },
                 ),
                 showEditIcon: false),
@@ -256,7 +255,9 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     list.insert(cellIndex, newValue);
     // removes the next element of list
     // after adding the new value in list;
-    list.removeAt(cellIndex + 1);
+    setState(() {
+      list.removeAt(cellIndex + 1);
+    });
     // converts list to a string
     // write() needs a string
     // for writeAsString()
@@ -290,12 +291,11 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
 
   void _addData() async {
     var now = new DateTime.now();
-    var formatter = new DateFormat('yyyy-MM-dd');
+    var formatter = new DateFormat('MM/dd/yyyy');
     String formattedDate = formatter.format(now);
-    print(formattedDate); // 2016-01-25
     List list = await read();
     list.insert(0, "");
-    list.insert(1, date);
+    list.insert(1, formattedDate);
     write(list.toString());
     print(list);
   }
