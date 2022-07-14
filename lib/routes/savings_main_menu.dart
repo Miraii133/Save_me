@@ -284,9 +284,11 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     List list = await read();
     // removes both the value
     // in amount and date
-    list.removeAt(0);
-    list.removeAt(0);
-    write(list.toString());
+    setState(() {
+      list.removeAt(0);
+      list.removeAt(0);
+      write(list.toString());
+    });
   }
 
   void _addData() async {
@@ -294,9 +296,11 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
     var formatter = new DateFormat('MM/dd/yyyy');
     String formattedDate = formatter.format(now);
     List list = await read();
-    list.insert(0, "");
-    list.insert(1, formattedDate);
-    write(list.toString());
-    print(list);
+    setState(() {
+      list.insert(0, "");
+      list.insert(1, formattedDate);
+      write(list.toString());
+      print(list);
+    });
   }
 }
