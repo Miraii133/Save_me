@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:intl/intl.dart';
 
 class SavingsMainMenu extends StatefulWidget {
   const SavingsMainMenu({Key? key}) : super(key: key);
@@ -288,9 +289,13 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
   }
 
   void _addData() async {
+    var now = new DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    print(formattedDate); // 2016-01-25
     List list = await read();
     list.insert(0, "");
-    list.insert(1, "");
+    list.insert(1, date);
     write(list.toString());
     print(list);
   }
