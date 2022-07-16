@@ -300,7 +300,6 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
       list.insert(0, "");
       list.insert(1, formattedDate);
       write(list.toString());
-      print(list);
     });
   }
 }
