@@ -53,16 +53,15 @@ class _SavingsMainMenuState extends State<SavingsMainMenu> {
                   children: [
                     const Text("Savings",
                         style: TextStyle(fontSize: 35, color: Colors.yellow)),
-                    FutureBuilder(
+                    FutureBuilder<int>(
                       // waits for _createDataTable future
-                      future: Future.wait([_getTotalSavings()]),
+                      future: _getTotalSavings(),
                       builder: (context,
                           // AsyncSnapshot just enables indexes
                           // for multiple widgets
-                          AsyncSnapshot<List<dynamic>> snapshot) {
+                          snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           String newSnapshotData = "";
-
                           // removes [ and ] when snapshot.data
                           // is received from _getTotalSavings()
                           // snapshot.data will automatically have
